@@ -76,78 +76,68 @@ public class AdminReports extends JPanel {
 
     // Updated createStatusPanel method
     private JPanel createStatusPanel() {
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBackground(new Color(248, 249, 255));
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(new Color(248, 249, 255));
 
-        JPanel statusPanel = new JPanel(new BorderLayout());
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
         statusPanel.setBackground(Color.WHITE);
-        statusPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 15));
-        statusPanel.setPreferredSize(new Dimension(400, 270));
-        statusPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-        statusPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        statusPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
+
+        // FIXED HEIGHT for perfect alignment
+        statusPanel.setPreferredSize(new Dimension(400, 500));
+        statusPanel.setMaximumSize(new Dimension(400, 500));
 
         JLabel statusLabel = new JLabel("Stock Status Summary");
         statusLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        statusPanel.add(statusLabel, BorderLayout.NORTH);
+        statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel grid = new JPanel(new GridLayout(5, 2, 20, 5));
+        JPanel grid = new JPanel(new GridLayout(5, 2, 20, 8));
         grid.setBackground(Color.WHITE);
 
-        // Total Ingredients
         JLabel t1 = new JLabel("Total Ingredients");
         totalIngredientsLabel = new JLabel(String.valueOf(mainFrame.inventory.size()));
 
-        // Low Stock
         JLabel t2 = new JLabel("Low Stock Items");
         lowStockLabel = new JLabel(String.valueOf(
                 mainFrame.inventory.stream().filter(i -> i.getQuantity() < i.getMinLevel() && i.getQuantity() > 0).count()
         ));
-        t2.setForeground(Color.decode("#FFB823")); 
+        t2.setForeground(Color.decode("#FFB823"));
         lowStockLabel.setForeground(Color.decode("#FFD700"));
 
-        // Expiring Soon
         JLabel t3 = new JLabel("Expiring Items");
         expiringLabel = new JLabel(String.valueOf(
                 mainFrame.inventory.stream().filter(i -> i.isExpiringSoon()).count()
         ));
-        t3.setForeground(Color.decode("#DC6B19")); 
+        t3.setForeground(Color.decode("#DC6B19"));
         expiringLabel.setForeground(Color.decode("#DC6B19"));
 
-        // Expired
         JLabel t4 = new JLabel("Expired Items");
         expiredLabel = new JLabel(String.valueOf(
                 mainFrame.inventory.stream().filter(i -> i.isExpired()).count()
         ));
-        t4.setForeground(Color.decode("#BF1A1A")); 
+        t4.setForeground(Color.decode("#BF1A1A"));
         expiredLabel.setForeground(Color.decode("#BF1A1A"));
 
-        // Out of Stock
         JLabel t5 = new JLabel("Out of Stock");
         outOfStockLabel = new JLabel(String.valueOf(
                 mainFrame.inventory.stream().filter(i -> i.getQuantity() == 0).count()
         ));
-        t5.setForeground(Color.decode("#BF1A1A")); 
+        t5.setForeground(Color.decode("#BF1A1A"));
         outOfStockLabel.setForeground(Color.decode("#BF1A1A"));
 
-        // Align left
-        t1.setHorizontalAlignment(SwingConstants.LEFT);
-        t2.setHorizontalAlignment(SwingConstants.LEFT);
-        t3.setHorizontalAlignment(SwingConstants.LEFT);
-        t4.setHorizontalAlignment(SwingConstants.LEFT);
-        t5.setHorizontalAlignment(SwingConstants.LEFT);
-
-        // Add to grid
         grid.add(t1); grid.add(totalIngredientsLabel);
         grid.add(t2); grid.add(lowStockLabel);
         grid.add(t3); grid.add(expiringLabel);
         grid.add(t4); grid.add(expiredLabel);
         grid.add(t5); grid.add(outOfStockLabel);
 
-        statusPanel.add(grid, BorderLayout.CENTER);
-        leftPanel.add(statusPanel, BorderLayout.NORTH);
+        statusPanel.add(statusLabel);
+        statusPanel.add(Box.createVerticalStrut(10));
+        statusPanel.add(grid);
 
-        return leftPanel;
+        wrapper.add(statusPanel, BorderLayout.NORTH);
+        return wrapper;
     }
 
     // New method to refresh summary labels
@@ -168,42 +158,39 @@ public class AdminReports extends JPanel {
     }
 
     private JPanel createTopUsedPanel() {
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBackground(new Color(248, 249, 255));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(new Color(248, 249, 255));
 
         JPanel topUsedPanel = new JPanel();
         topUsedPanel.setLayout(new BoxLayout(topUsedPanel, BoxLayout.Y_AXIS));
         topUsedPanel.setBackground(Color.WHITE);
-        topUsedPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 15));
-        topUsedPanel.setPreferredSize(new Dimension(400, 270));
-        topUsedPanel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-        topUsedPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        topUsedPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel topUsedLabel = new JLabel("Top Used Ingredients");
-        topUsedLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        topUsedLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        topUsedPanel.add(topUsedLabel);
+        // FIXED HEIGHT and WIDTH like Reports.java
+        topUsedPanel.setPreferredSize(new Dimension(400, 400));
+        topUsedPanel.setMaximumSize(new Dimension(400, 400));
 
-        JLabel topUsedSubtitle = new JLabel("Most frequently used items (This month)");
-        topUsedSubtitle.setFont(new Font("Arial", Font.PLAIN, 14));
-        topUsedSubtitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        topUsedPanel.add(topUsedSubtitle);
+        JLabel titleLabel = new JLabel("Top Used Ingredients");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        int[] usageValues = {8, 5, 3, 6, 2};
-        String[] ingredientNames = {"Tomato", "Cheese", "Onion", "Lettuce", "Pepper"};
+        JLabel subtitleLabel = new JLabel("Most frequently used items (This month)");
+        subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        subtitleLabel.setForeground(Color.GRAY);
+        subtitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        BarChartPanel chartPanel = new BarChartPanel(usageValues, ingredientNames);
+        ChartPanel chartPanel = new ChartPanel(); // dual-bar chart
+        chartPanel.setPreferredSize(new Dimension(360, 160));
+        chartPanel.setMaximumSize(new Dimension(360, 160));
 
-        JPanel chartWrapper = new JPanel(new BorderLayout());
-        chartWrapper.setBackground(Color.WHITE);
-        chartWrapper.add(chartPanel, BorderLayout.CENTER);
-        chartWrapper.setPreferredSize(new Dimension(400, 270));
+        topUsedPanel.add(titleLabel);
+        topUsedPanel.add(Box.createVerticalStrut(5));
+        topUsedPanel.add(subtitleLabel);
+        topUsedPanel.add(Box.createVerticalStrut(10));
+        topUsedPanel.add(chartPanel);
 
-        topUsedPanel.add(chartWrapper);
-
-        rightPanel.add(topUsedPanel, BorderLayout.NORTH);
-        return rightPanel;
+        wrapper.add(topUsedPanel, BorderLayout.NORTH);
+        return wrapper;
     }
 
     private JPanel createInventoryPanel() {
@@ -335,64 +322,78 @@ public class AdminReports extends JPanel {
         }
     }
 
-    static class BarChartPanel extends JPanel {
-        private int[] values;
-        private String[] labels;
+static class ChartPanel extends JPanel {
+    private final String[] labels = {"Eggs", "Fresh Pork", "Tomatoes"};
+    private final int[] values1 = {60, 100, 30};
+    private final int[] values2 = {40, 0, 70};
 
-        public BarChartPanel(int[] values, String[] labels) {
-            this.values = values;
-            this.labels = labels;
-            setBackground(Color.WHITE);
+    public ChartPanel() {
+        setBackground(Color.WHITE);
+        setPreferredSize(new Dimension(450, 200)); // enough height for lines and labels
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int width = getWidth();
+        int height = getHeight();
+
+        int topPadding = 20;
+        int bottomPadding = 50; // space for labels
+        int leftPadding = 50;   // space for Y-axis labels
+
+        int barWidth = 50;
+        int gap = 30; // space between bars
+        int startX = leftPadding + 30; // shift bars right
+
+        // Draw Y-axis percentage lines
+        g2.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2.setColor(Color.GRAY);
+        int markerCount = 5; // 0%, 20%, 40%, 60%, 80%, 100%
+        for (int i = 0; i <= markerCount; i++) {
+            int y = height - bottomPadding - (height - bottomPadding - topPadding) * i / markerCount;
+            String yLabel = (i * 20) + "%"; // 0%, 20%, ..., 100%
+            g2.drawString(yLabel, 10, y + 5); // Y-axis number
+
+            g2.setColor(new Color(220, 220, 220)); // light horizontal line
+            g2.drawLine(leftPadding, y, width - 20, y);
+            g2.setColor(Color.GRAY);
         }
 
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // Draw bars and labels
+        for (int i = 0; i < labels.length; i++) {
+            int x = startX + i * (barWidth + gap);
 
-            int width = getWidth();
-            int height = getHeight();
-            int leftPadding = 50;
-            int bottomPadding = 100;
-            int topPadding = 20;
+            // Primary bar
+            int barHeight1 = (height - bottomPadding - topPadding) * values1[i] / 100;
+            g2.setColor(new Color(255, 99, 71));
+            g2.fillRect(x, height - bottomPadding - barHeight1, barWidth, barHeight1);
 
-            int maxValue = 1;
-            for (int val : values) if (val > maxValue) maxValue = val;
+            // Secondary bar (stacked on top of primary)
+            if (values2[i] > 0) {
+                int barHeight2 = (height - bottomPadding - topPadding) * values2[i] / 100;
+                g2.setColor(new Color(200, 200, 200));
+                g2.fillRect(x, height - bottomPadding - barHeight1 - barHeight2, barWidth, barHeight2);
+            }
 
-            int barAreaWidth = width - leftPadding - 20;
-            int barWidth = barAreaWidth / (values.length * 2);
-
+            // Value above the bar
             g2.setColor(Color.BLACK);
-            g2.drawLine(leftPadding, topPadding, leftPadding, height - bottomPadding);
+            g2.setFont(new Font("Arial", Font.BOLD, 11));
+            String valueText = String.valueOf(values1[i]);
+            int stringWidth = g2.getFontMetrics().stringWidth(valueText);
+            g2.drawString(valueText, x + (barWidth - stringWidth) / 2, height - bottomPadding - barHeight1 - 5);
 
-            int markerCount = 5;
-            for (int i = 0; i <= markerCount; i++) {
-                int y = height - bottomPadding - (height - bottomPadding - topPadding) * i / markerCount;
-                int valueLabel = maxValue * i / markerCount;
-                g2.setColor(Color.GRAY);
-                g2.drawLine(leftPadding - 5, y, width - 20, y);
-                g2.setColor(Color.BLACK);
-                g2.drawString(String.valueOf(valueLabel), 10, y + 5);
-            }
-
-            for (int i = 0; i < values.length; i++) {
-                int barHeight = (height - bottomPadding - topPadding) * values[i] / maxValue;
-                int x = leftPadding + (i * 2 + 1) * barWidth;
-                int y = height - bottomPadding - barHeight;
-
-                g2.setColor(new Color(100, 149, 237));
-                g2.fillRect(x, y, barWidth, barHeight);
-
-                g2.setColor(Color.BLACK);
-                String valueText = String.valueOf(values[i]);
-                int stringWidth = g2.getFontMetrics().stringWidth(valueText);
-                g2.drawString(valueText, x + (barWidth - stringWidth) / 2, y - 5);
-
-                String label = labels[i];
-                int labelWidth = g2.getFontMetrics().stringWidth(label);
-                g2.drawString(label, x + (barWidth - labelWidth) / 2, height - bottomPadding + 20);
-            }
+            // Label below each bar
+            String label = labels[i];
+            int labelWidth = g2.getFontMetrics().stringWidth(label);
+            g2.drawString(label, x + (barWidth - labelWidth) / 2, height - bottomPadding + 20);
         }
     }
-}      
+}
+
+
+}
+
