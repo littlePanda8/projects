@@ -28,11 +28,16 @@ public class Login extends JFrame {
         mainPanel.setBackground(new Color(248,249,255)); // match your BG
 
         // ▼ Create logo component ▼
-        ImageIcon logoIcon = new ImageIcon(
-                new ImageIcon(getClass().getResource("/img/logo.png"))
-                .getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)
-        );
-
+       ImageIcon logoIcon = null;
+         java.net.URL logoURL = getClass().getResource("/img/logo.png");
+         if (logoURL != null) {
+             logoIcon = new ImageIcon(
+                     new ImageIcon(logoURL)
+                     .getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)
+             );
+         } else {
+             System.err.println("Error: /img/logo.png not found.");
+         }
         JLabel logoLabel = new JLabel(logoIcon);
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // <-- VERY IMPORTANT
         logoLabel.setOpaque(false); // no background (or setColor if needed)
